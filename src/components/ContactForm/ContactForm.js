@@ -1,5 +1,9 @@
 import React from 'react';
 import { Formik, ErrorMessage } from 'formik';
+import * as yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contactsSlice';
 import {
   FormAddContacts,
   Label,
@@ -8,8 +12,20 @@ import {
   ErrorElement,
   ButtonForm,
 } from './ContactForm.styled';
-import * as yup from 'yup';
-import PropTypes from 'prop-types';
+import Notiflix from 'notiflix';
+
+Notiflix.Notify.init({
+  width: '500px',
+  position: 'center-top',
+  closeButton: true,
+  fontFamily: 'Comic Sans MS',
+  fontSize: '24px',
+  warning: {
+    background: 'rgb(255, 240, 245)',
+    textColor: 'rgb(40, 70, 219)',
+    notiflixIconColor: 'rgb(205, 92, 92)',
+  },
+});
 
 let schema = yup.object().shape({
   name: yup
@@ -39,9 +55,24 @@ const FormError = ({ name }) => {
   );
 };
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
   const handleSubmit = (values, { resetForm }) => {
-    onSubmit(values);
+    const findContactByName = (array, name) => {
+      return array.find(contact => contact.name.toLowerCase() === name);
+    };
+
+    const { name } = values;
+    const normalizedName = name.toLowerCase();
+
+    if (findContactByName(contacts, normalizedName)) {
+      Notiflix.Notify.warning(`${name} is already in contacts`);
+      return;
+    }
+
+    dispatch(addContact(values));
     resetForm();
   };
 
@@ -70,10 +101,6 @@ const ContactForm = ({ onSubmit }) => {
       </FormAddContacts>
     </Formik>
   );
-};
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };
 
 export default ContactForm;

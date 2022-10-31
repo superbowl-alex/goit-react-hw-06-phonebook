@@ -1,27 +1,33 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ContactItem from '../ContactItem';
-import { List } from './ContactList.styled';
+import Notification from '../Notification';
+import { useSelector } from 'react-redux';
+import { getContacts, getFilter } from 'redux/selectors';
+import { List, WrapList, ListTitle } from './ContactList.styled';
 
-const ContactList = ({ contacts, onDeleteContact }) => {
-  return (
-    <List>
-      {contacts.map(({ id, name, number }) => (
-        <ContactItem
-          key={id}
-          id={id}
-          name={name}
-          number={number}
-          onDeleteContact={onDeleteContact}
-        />
-      ))}
-    </List>
+const ContactList = () => {
+  const filter = useSelector(getFilter);
+  const contacts = useSelector(getContacts);
+  const normalizedFilter = filter.toLowerCase();
+
+  const getVisibleContacts = contacts.filter(({ name }) =>
+    name.toLowerCase().includes(normalizedFilter)
   );
-};
 
-ContactList.propTypes = {
-  contacts: PropTypes.array.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
+  return (
+    <WrapList>
+      <ListTitle>Contacts</ListTitle>
+      {contacts.length > 0 ? (
+        <List>
+          {getVisibleContacts.map(({ id, name, number }) => (
+            <ContactItem key={id} id={id} name={name} number={number} />
+          ))}
+        </List>
+      ) : (
+        <Notification message="There is no contact in Phonebook" />
+      )}
+    </WrapList>
+  );
 };
 
 export default ContactList;
