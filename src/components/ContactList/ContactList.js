@@ -8,7 +8,7 @@ import { List, WrapList, ListTitle } from './ContactList.styled';
 const ContactList = () => {
   const filter = useSelector(getFilter);
   const contacts = useSelector(getContacts);
-  const normalizedFilter = filter.toLowerCase();
+  const normalizedFilter = filter.value.toLowerCase();
 
   const getVisibleContacts = contacts.items.filter(({ name }) =>
     name?.toLowerCase()?.includes(normalizedFilter)

@@ -60,8 +60,8 @@ const ContactForm = () => {
   const contacts = useSelector(getContacts);
 
   const handleSubmit = (values, { resetForm }) => {
-    const findContactByName = (array, name) => {
-      return array.find(contact => contact.name.toLowerCase() === name);
+    const findContactByName = (array, newName) => {
+      return array.find(({ name }) => name.toLowerCase() === newName);
     };
 
     const { name } = values;
