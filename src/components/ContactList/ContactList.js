@@ -7,18 +7,17 @@ import { List, WrapList, ListTitle } from './ContactList.styled';
 
 const ContactList = () => {
   const filter = useSelector(getFilter);
-  const contacts = Object.values(useSelector(getContacts));
+  const contacts = useSelector(getContacts);
   const normalizedFilter = filter.toLowerCase();
-  console.log(contacts);
 
-  const getVisibleContacts = contacts.filter(({ name }) =>
+  const getVisibleContacts = contacts.items.filter(({ name }) =>
     name?.toLowerCase()?.includes(normalizedFilter)
   );
 
   return (
     <WrapList>
       <ListTitle>Contacts</ListTitle>
-      {contacts.length > 0 ? (
+      {contacts.items.length > 0 ? (
         <List>
           {getVisibleContacts.map(({ id, name, number }) => (
             <ContactItem key={id} id={id} name={name} number={number} />
