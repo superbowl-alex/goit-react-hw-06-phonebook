@@ -7,11 +7,12 @@ import { List, WrapList, ListTitle } from './ContactList.styled';
 
 const ContactList = () => {
   const filter = useSelector(getFilter);
-  const contacts = useSelector(getContacts);
+  const contacts = Object.values(useSelector(getContacts));
   const normalizedFilter = filter.toLowerCase();
+  console.log(contacts);
 
   const getVisibleContacts = contacts.filter(({ name }) =>
-    name.toLowerCase().includes(normalizedFilter)
+    name?.toLowerCase()?.includes(normalizedFilter)
   );
 
   return (

@@ -1,4 +1,7 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+
 import Notiflix from 'notiflix';
 Notiflix.Notify.init({
   width: '500px',
@@ -40,11 +43,21 @@ const contactsSlice = createSlice({
       },
     },
     deleteContact(state, action) {
-      const index = state.findIndex(contact => contact.id === action.payload);
+      const index = Object.values(state).findIndex(
+        contact => contact.id === action.payload
+      );
       state.splice(index, 1);
     },
   },
 });
 
+const persistConfig = {
+  key: 'contacts',
+  storage,
+};
+
+export const contactsReducer = persistReducer(
+  persistConfig,
+  contactsSlice.reducer
+);
 export const { addContact, deleteContact } = contactsSlice.actions;
-export const contactsReducer = contactsSlice.reducer;
