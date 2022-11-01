@@ -1,7 +1,6 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
-
 import Notiflix from 'notiflix';
 Notiflix.Notify.init({
   width: '500px',
